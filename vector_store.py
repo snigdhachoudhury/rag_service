@@ -25,9 +25,11 @@ def get_model():
     """Get cached model instance"""
     global model_cache
     if model_cache is None:
-        logger.info("Loading Sentence Transformer model (one-time operation)...")
-        model_cache = SentenceTransformer('all-MiniLM-L6-v2')
-        logger.info("✅ Model loaded and cached")
+        logger.info("Loading optimized Sentence Transformer model...")
+        # Force CPU usage and optimize for memory
+        model_cache = SentenceTransformer('all-MiniLM-L6-v2', device='cpu')
+        model_cache.max_seq_length = 256  # Reduce memory usage
+        logger.info("✅ Optimized model loaded and cached")
     return model_cache
 
 def get_text_hash(text: str) -> str:

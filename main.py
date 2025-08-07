@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
 import asyncio
+import gc
 import logging
 from datetime import datetime
 
@@ -118,6 +119,8 @@ async def run_pipeline(request: Request, body: RunRequest):
                         logger.error(f"Error processing question '{question}': {e}")
                         answers.append(f"Error processing question: {str(e)}")
             
+            # Force garbage collection to free memory
+            gc.collect()
             return {"answers": answers}
             
         except HTTPException:
